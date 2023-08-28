@@ -18,7 +18,7 @@ import openai
 import streamlit as st
 
 st.set_page_config(
-        page_title="Visual Inspection API", page_icon="🤖", layout="wide"
+        page_title="DALL-E Image Generator", page_icon="🎨", layout="wide"
     )
 logo = Image.open("logo_stk.png")
 st.image(logo)
