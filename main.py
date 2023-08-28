@@ -49,7 +49,7 @@ if prompt := st.chat_input():
     n=number_of_images if number_of_images else 1
     )
     urls = [response.get('data')[i].get('url') for i in range(number_of_images)]
-    st.session_state.messages.append({"role": "assistant", "content": urls})
+    st.session_state.messages.append({"role": "assistant", "content": st.image(urls)})
     images = [url for url in urls]
     st.chat_message("assistant").image(images)
 
