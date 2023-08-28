@@ -33,7 +33,10 @@ if "messages" not in st.session_state:
     st.session_state["messages"] = [{"role": "assistant", "content": "How can I help you?"}]
 
 for msg in st.session_state.messages:
-    st.chat_message(msg["role"]).write(msg["content"])
+    if msg["role"] == "user":
+        st.chat_message(msg["role"]).write(msg["content"])
+    else:
+        st.chat_message("assistant").image(msg["content"])
 
 if prompt := st.chat_input():
     if not openai_api_key:
@@ -49,7 +52,7 @@ if prompt := st.chat_input():
     n=number_of_images if number_of_images else 1
     )
     urls = [response.get('data')[i].get('url') for i in range(number_of_images)]
-    st.session_state.messages.append({"role": "assistant", "content": st.image(urls)})
+    st.session_state.messages.append({"role": "assistant", "content": urls})
     images = [url for url in urls]
     st.chat_message("assistant").image(images)
 
