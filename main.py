@@ -35,6 +35,8 @@ if "messages" not in st.session_state:
 for msg in st.session_state.messages:
     if msg["role"] == "user":
         st.chat_message(msg["role"]).write(msg["content"])
+    elif msg["role"] == "assistant" and msg["content"] == "How can I help you?":
+        st.chat_message(msg["role"]).write(msg["content"])
     else:
         st.chat_message("assistant").image(msg["content"])
 
