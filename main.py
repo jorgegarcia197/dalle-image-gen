@@ -7,11 +7,12 @@ from dotenv import load_dotenv
 load_dotenv()
 
 
-
-
 openai.api_type = "azure"
-openai.api_base = st.secrets["OPENAI_API_BASE"]
-openai.api_version = st.secrets["OPENAI_API_VERSION"]
+openai.api_base = os.environ.get("OPENAI_API_BASE")
+openai.api_version = os.environ.get("OPENAI_API_VERSION")
+
+ASSISTANT_PATH = "assets/assistant.png"
+USER_PATH = "assets/users_white.png"
 
 
 import openai
@@ -20,8 +21,7 @@ import streamlit as st
 st.set_page_config(
         page_title="DALL-E Image Generator", page_icon="🎨", layout="wide"
     )
-logo = Image.open("logo_stk.png")
-st.image(logo)
+st.image('assets/InnovationLogoDark.png')
 
 with st.sidebar:
     openai_api_key = st.text_input("OpenAI API Key", key="chatbot_api_key", type="password")
@@ -34,11 +34,11 @@ if "messages" not in st.session_state:
 
 for msg in st.session_state.messages:
     if msg["role"] == "user":
-        st.chat_message(msg["role"]).write(msg["content"])
+        st.chat_message(msg["role"],avatar=USER_PATH).write(msg["content"])
     elif msg["role"] == "assistant" and msg["content"] == "How can I help you?":
-        st.chat_message(msg["role"]).write(msg["content"])
+        st.chat_message(msg["role"],avatar=ASSISTANT_PATH).write(msg["content"])
     else:
-        st.chat_message("assistant").image(msg["content"])
+        st.chat_message("assistant",avatar=ASSISTANT_PATH).image(msg["content"])
 
 if prompt := st.chat_input():
     if not openai_api_key:
@@ -47,7 +47,7 @@ if prompt := st.chat_input():
 
     openai.api_key = openai_api_key
     st.session_state.messages.append({"role": "user", "content": prompt})
-    st.chat_message("user").write(prompt)
+    st.chat_message("user",avatar=USER_PATH).write(prompt)
     response = openai.Image.create(
     prompt=prompt,
     size=f'{image_size}x{image_size}' if image_size else '1024x1024',
@@ -56,6 +56,6 @@ if prompt := st.chat_input():
     urls = [response.get('data')[i].get('url') for i in range(number_of_images)]
     st.session_state.messages.append({"role": "assistant", "content": urls})
     images = [url for url in urls]
-    st.chat_message("assistant").image(images)
+    st.chat_message("assistant",avatar=ASSISTANT_PATH).image(images)
 
 
